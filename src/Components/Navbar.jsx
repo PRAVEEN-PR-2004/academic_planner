@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Login from "../Pages/Login";
+import Signup from "../Pages/Signup";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // For the mobile menu toggle
+  const [showLogin, setShowLogin] = useState(true); // Track whether to show login or signup form
+  const [isModalOpen, setIsModalOpen] = useState(false); // For the login/signup modal visibility
 
-  const toggleMenu = () => setIsOpen(!isOpen);
+  const toggleMenu = () => setIsOpen(!isOpen); // Toggle mobile menu
 
   const navLinks = [
     { name: "Dashboard", path: "/dashboard" },
@@ -12,6 +16,20 @@ const Navbar = () => {
     { name: "Suggestions", path: "/suggestions" },
     { name: "Courses", path: "/courses" },
   ];
+
+  const openLoginModal = () => {
+    setShowLogin(true); // Show login form
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const openSignupModal = () => {
+    setShowLogin(false); // Show signup form
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
 
   return (
     <nav className="fixed top-0 left-0 z-50 w-full bg-white shadow-lg">
@@ -33,6 +51,16 @@ const Navbar = () => {
             </li>
           ))}
         </ul>
+
+        {/* Login Button (Visible on Desktop and Mobile) */}
+        <div className="hidden md:block">
+          <button
+            onClick={openLoginModal} // Only opens login modal
+            className="font-medium text-black hover:text-primary"
+          >
+            Login
+          </button>
+        </div>
 
         {/* Mobile Toggle Button */}
         <div className="md:hidden">
@@ -69,15 +97,43 @@ const Navbar = () => {
             <li key={link.name}>
               <Link
                 to={link.path}
-                onClick={() => setIsOpen(false)}
+                onClick={() => setIsOpen(false)} // Close menu on link click
                 className="block w-full py-1 text-black transition hover:text-primary"
               >
                 {link.name}
               </Link>
             </li>
           ))}
+          {/* Login Button in Mobile View */}
+          <li>
+            <button
+              onClick={openLoginModal} // Only opens login modal
+              className="font-medium text-black hover:text-primary"
+            >
+              Login
+            </button>
+          </li>
         </ul>
       </div>
+
+      {/* Modal Popup for Login/Signup */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-600 bg-opacity-50">
+          <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+            {showLogin ? (
+              <Login switchToSignup={openSignupModal} closeModal={closeModal} />
+            ) : (
+              <Signup switchToLogin={openLoginModal} closeModal={closeModal} />
+            )}
+            <button
+              onClick={closeModal}
+              className="absolute text-gray-500 top-2 right-2"
+            >
+              X
+            </button>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
