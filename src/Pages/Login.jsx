@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const Login = ({ switchToSignup, closeModal }) => {
-  const [form, setForm] = useState({ name: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -9,7 +9,7 @@ const Login = ({ switchToSignup, closeModal }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Logging in as ${form.name}`);
+    alert(`Logging in with email: ${form.email}`);
     closeModal(); // Close the modal after successful login
   };
 
@@ -21,17 +21,18 @@ const Login = ({ switchToSignup, closeModal }) => {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         <input
-          name="name"
-          placeholder="Name"
-          value={form.name}
+          name="email"
+          type="email"
+          placeholder="Email"
+          value={form.email}
           onChange={handleChange}
           className="px-4 py-2 border rounded-lg"
           required
         />
         <input
           name="password"
-          placeholder="Password"
           type="password"
+          placeholder="Password"
           value={form.password}
           onChange={handleChange}
           className="px-4 py-2 border rounded-lg"
