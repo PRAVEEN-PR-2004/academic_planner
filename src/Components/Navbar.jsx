@@ -1,33 +1,47 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  return (
-    <nav className="bg-gray-900 text-white shadow-md fixed top-0 left-0 w-full z-10">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        <div className="text-2xl font-bold tracking-wide">Academic Planner</div>
+  const navLinks = [
+    { name: "Dashboard", path: "/dashboard" },
+    { name: "Timetable", path: "/timetable" },
+    { name: "Suggestions", path: "/suggestions" },
+    { name: "Courses", path: "/courses" },
+  ];
 
-        {/* Desktop Menu */}
-        <ul className="hidden md:flex space-x-6 text-sm font-medium">
-          <li className="hover:text-yellow-400 cursor-pointer transition">
-            Dashboard
-          </li>
-          <li className="hover:text-yellow-400 cursor-pointer transition">
-            Timetable
-          </li>
-          <li className="hover:text-yellow-400 cursor-pointer transition">
-            Suggestions
-          </li>
+  return (
+    <nav className="fixed top-0 left-0 z-50 w-full bg-white shadow-lg">
+      <div className="flex items-center justify-between px-4 py-3 mx-auto max-w-7xl">
+        <Link to="/" className="text-2xl font-bold tracking-wider text-primary">
+          Academic Planner
+        </Link>
+
+        {/* Desktop Links */}
+        <ul className="hidden space-x-8 text-sm font-medium md:flex">
+          {navLinks.map((link) => (
+            <li key={link.name}>
+              <Link
+                to={link.path}
+                className="text-black transition duration-300 hover:text-primary"
+              >
+                {link.name}
+              </Link>
+            </li>
+          ))}
         </ul>
 
-        {/* Hamburger Menu for Mobile */}
+        {/* Mobile Toggle Button */}
         <div className="md:hidden">
-          <button onClick={toggleMenu} className="text-white">
+          <button
+            onClick={toggleMenu}
+            className="text-black focus:outline-none"
+          >
             <svg
-              className="w-6 h-6"
+              className="w-7 h-7"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -37,7 +51,7 @@ const Navbar = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d="M4 6h16M4 12h16M4 18h16"
+                d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
               />
             </svg>
           </button>
@@ -46,19 +60,23 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`${
+        className={`md:hidden transition-all duration-300 ease-in-out ${
           isOpen ? "block" : "hidden"
-        } md:hidden bg-gray-800 text-white p-4 space-y-4`}
+        } bg-white px-4 pb-4`}
       >
-        <li className="hover:text-yellow-400 cursor-pointer transition">
-          Dashboard
-        </li>
-        <li className="hover:text-yellow-400 cursor-pointer transition">
-          Timetable
-        </li>
-        <li className="hover:text-yellow-400 cursor-pointer transition">
-          Suggestions
-        </li>
+        <ul className="flex flex-col items-center pt-2 space-y-3 text-sm font-medium">
+          {navLinks.map((link) => (
+            <li key={link.name}>
+              <Link
+                to={link.path}
+                onClick={() => setIsOpen(false)}
+                className="block w-full py-1 text-black transition hover:text-primary"
+              >
+                {link.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
     </nav>
   );
